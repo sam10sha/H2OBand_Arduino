@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     struct sockaddr_rc addr;
 
     if(argc < 2) {
-        perror("%s <channel>\n", argv[0]);
+        printf("%s <channel>\n", argv[0]);
         exit(0);
     }
 
@@ -37,7 +37,7 @@ int main(int argc, char** argv)
 
     addr.rc_family = AF_BLUETOOTH;
     bacpy(&addr.rc_bdaddr, BDADDR_ANY);
-    addr.rc_channel = atoi(argv[2]);
+    addr.rc_channel = atoi(argv[1]);
     alen = sizeof(addr);
 
     if(bind(sock, (struct sockaddr *)&addr, alen) < 0) {
