@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
         memset(buffer, 0, sizeof(buffer));
         recv(client, buffer, sizeof(buffer)-1, 0);
         cout << buffer;
-        cout << "\r\n";
+        cout << "\n";
         send(client, "Received\n", 9, 0);
         closesocket(client);
     } while(strcmp(buffer, "halt"));
