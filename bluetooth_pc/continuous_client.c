@@ -25,25 +25,25 @@ int main(int argc, char** argv) {
 
     shut_down = 0;
 
-    if((clientfd = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)) < 0) {
-        printf("Cannot create socket\n");
-        return 1;
-    }
-
     do {
         memset(buffer, 0, sizeof(buffer));
         printf(">>> ");
         scanf("%s", buffer);
+        if(!strcmp(buffer, "halt"))
+            shut_down = 1;
+        if((clientfd = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM)) < 0) {
+            printf("Cannot create socket\n");
+            continue;
+        }
         if(connect(clientfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
             printf("Failed to send\n");
             continue;
         }
-        if(!strcmp(buffer, "halt"))
-            shut_down = 1;
         send(clientfd, buffer, strlen(buffer), 0);
         memset(buffer, 0, sizeof(buffer));
         recv(clientfd, buffer, sizeof(buffer)-1, 0);
         printf("%s\n", buffer);
+        shutdown(clientfd, SHUT_RDWR);
     } while(!shut_down);
 
     shutdown(clientfd, SHUT_RDWR);
