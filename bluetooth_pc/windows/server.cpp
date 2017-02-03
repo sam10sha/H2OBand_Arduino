@@ -21,9 +21,8 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    int clilen;
     char buffer[100];
-    SOCKADDR_BTH server_addr, client_addr;
+    SOCKADDR_BTH server_addr;
     SOCKET server = socket(AF_BTH, SOCK_STREAM, BTHPROTO_RFCOMM),
            client;
 
@@ -38,7 +37,7 @@ int main(int argc, char** argv) {
     server_addr.addressFamily = AF_BTH;
     server_addr.btAddr = 0;
     //server_addr.serviceClassId = GUID_NULL;
-    server_addr.port = PORT;
+    server_addr.port = CHANNEL;
 
     if(bind(server, (struct sockaddr *)&server_addr, sizeof(server_addr)) == SOCKET_ERROR) {
         cout << "Could not bind to socket\r\n";
@@ -53,10 +52,11 @@ int main(int argc, char** argv) {
     cout << "Listening\r\n";
 
     do {
-        client = accept(server, (struct sockaddr *)&client_addr, &clilen);
+        client = accept(server, NULL, NULL);
         memset(buffer, 0, sizeof(buffer));
         recv(client, buffer, sizeof(buffer)-1, 0);
         cout << buffer;
+        cout << "\r\n";
         send(client, "Received\n", 9, 0);
         closesocket(client);
     } while(strcmp(buffer, "halt"));
