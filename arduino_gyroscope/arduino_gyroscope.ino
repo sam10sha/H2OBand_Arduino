@@ -57,15 +57,10 @@ bool setupMPU(){
   byte value;
   
   //CONFIGURATIONS
-  Serial.println("Beginning transmission");
   Wire.beginTransmission(MPU);
-  Serial.println("Sending address");
   Wire.write(0x20);
-  Serial.println("Ending transmission");
   Wire.endTransmission();
-  Serial.println("Requesting 1 byte");
   Wire.requestFrom(MPU, 1);
-  Serial.println("Waiting for response");
   if(Wire.available()) {
     value = Wire.read();
     Serial.print("Value: ");
