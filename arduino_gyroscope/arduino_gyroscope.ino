@@ -40,10 +40,12 @@ bool getMPUValues(const byte* registers, int num_registers, byte* results, int n
 void setup() {
   Wire.begin();
   Serial.begin(9600);
+  //DO NOTHING IF SERIAL MONITOR IS NOT OPEN
   while(!Serial) {}
   
   Serial.println("Setting up MPU");
   bool setup_complete = setupMPU();
+  //STOP PROGRAM OPERATIONS IF SETUP WAS NOT PROPERLY COMPLETED
   while(!setup_complete) {}
   
   Serial.println("Start data");
