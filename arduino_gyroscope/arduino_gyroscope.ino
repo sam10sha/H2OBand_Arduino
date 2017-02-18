@@ -5,6 +5,10 @@ const byte MPU     = 0x6B;
 const byte magn_vals[] = {0x08, 0x0A, 0x0C};
 const byte accel_vals[] = {0x28, 0x2A, 0x2C};
 
+
+
+
+
 //Sets up the MPU configuration registers to enable data collection from
 //accelerometer/gyroscope
 //
@@ -37,6 +41,8 @@ void printMPUVals(String data_name, const byte* data_addrs, int num_addrs);
 bool getMPUValues(const byte* registers, int num_registers, byte* results, int num_results);
 
 
+
+
 void setup() {
   Wire.begin();
   Serial.begin(9600);
@@ -45,15 +51,20 @@ void setup() {
   
   Serial.println("Setting up MPU");
   bool setup_complete = setupMPU();
+  
   //STOP PROGRAM OPERATIONS IF SETUP WAS NOT PROPERLY COMPLETED
-  while(!setup_complete) {}
+  if(!setup_complete) {
+    Serial.println("Setup failed");
+    while(1) {}
+  }
   
   Serial.println("Start data");
 }
 
 void loop() {
   printMPUVals("Accelerometer", accel_vals, 3);
-  delay(1000);
+  //printMPUVals("Magnetometer", magn_vals, 3);
+  delay(2000);
 }
 
 
@@ -71,7 +82,7 @@ bool setupMPU(){
   Wire.beginTransmission(MPU);
   Wire.write(0x20);
   Wire.endTransmission();
-  Wire.requestFrom(MPU, 1);
+  Wire.requestFrom((uint8_t)MPU, (uint8_t)1);
   if(Wire.available()) {
     value = Wire.read();
     Serial.print("Value: ");
@@ -115,12 +126,12 @@ bool getMPUValues(const byte* registers, int num_registers, byte* results, int n
     Wire.beginTransmission(MPU);
     Wire.write(registers[i]);
     Wire.endTransmission();
-    Wire.requestFrom(MPU, 2);
+    Wire.requestFrom((uint8_t)MPU, (uint8_t)2);
     
     byte_num = 0;
     value = 0;
     while(Wire.available())
-      value += Wire.read() << (byte_num++ * 8);
+      value += (int)Wire.read() << (byte_num++ * 8);
     results[current_num_results++] = value;
     if(!value)
       result_ok = false;
