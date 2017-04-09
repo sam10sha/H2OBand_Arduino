@@ -68,3 +68,7 @@ void gyroscope_operate()
   Serial.print("Temp: "); Serial.print((int)lsm.temperature);    Serial.println(" ");
   delay(200);
 }
+
+void gyroscope_retrieve_values(int accel_vals[3], int mag_vals[3], int gyro_vals[3], int* temp) {
+  
+}

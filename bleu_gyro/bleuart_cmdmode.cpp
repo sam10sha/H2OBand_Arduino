@@ -207,3 +207,16 @@ void blueart_operate(void)
   Serial.print(F("[Recv] ")); Serial.println(ble.buffer);
   ble.waitForOK();
 }
+
+void bleuart_send(char* msg, int len) {
+  // Make sure last character is null termination character
+  msg[len-1] = 0;
+  
+  ble.print("AT+BLEUARTTX=");
+  ble.println(msg);
+
+  // check response stastus
+  if (! ble.waitForOK() ) {
+    Serial.println(F("Failed to send?"));
+  }
+}
