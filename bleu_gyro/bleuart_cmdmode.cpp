@@ -208,10 +208,7 @@ void blueart_operate(void)
   ble.waitForOK();
 }
 
-void bleuart_send(char* msg, int len) {
-  // Make sure last character is null termination character
-  msg[len-1] = 0;
-  
+void bleuart_send(char* msg) {
   ble.print("AT+BLEUARTTX=");
   ble.println(msg);
 

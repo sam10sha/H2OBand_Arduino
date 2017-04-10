@@ -16,7 +16,5 @@ void bleuart_setup(void);
 void blueart_operate(void);
 
 /// Sends the bytes in msg through the bluefruit
-/// Ensures that the last character of msg is null termination character
 /// @param msg   The message to send through the bleuart
-/// @param len   The length of the message to send
-void bleuart_send(char* msg, int len);
+void bleuart_send(char* msg);

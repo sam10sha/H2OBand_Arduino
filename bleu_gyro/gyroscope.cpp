@@ -70,5 +70,19 @@ void gyroscope_operate()
 }
 
 void gyroscope_retrieve_values(int accel_vals[3], int mag_vals[3], int gyro_vals[3], int* temp) {
+  lsm.read();
   
+  accel_vals[0] = (int)lsm.accelData.x;
+  accel_vals[1] = (int)lsm.accelData.y;
+  accel_vals[2] = (int)lsm.accelData.z;
+  
+  mag_vals[0] = (int)lsm.magData.x;
+  mag_vals[1] = (int)lsm.magData.y;
+  mag_vals[2] = (int)lsm.magData.z;
+  
+  gyro_vals[0] = (int)lsm.gyroData.x;
+  gyro_vals[1] = (int)lsm.gyroData.y;
+  gyro_vals[2] = (int)lsm.gyroData.z;
+  
+  *temp = (int)lsm.temperature;
 }
