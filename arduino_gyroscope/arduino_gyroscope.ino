@@ -71,7 +71,7 @@ bool setupMPU(){
   Wire.beginTransmission(MPU);
   Wire.write(0x20);
   Wire.endTransmission();
-  Wire.requestFrom(MPU, 1);
+  Wire.requestFrom((uint8_t)MPU, (uint8_t)1);
   if(Wire.available()) {
     value = Wire.read();
     Serial.print("Value: ");
@@ -104,24 +104,53 @@ void printMPUVals(String data_name, const byte* data_addrs, int num_addrs) {
   Serial.println("}\n");
 }
 
+/* bool getMPUValues(const byte* registers, int num_registers, byte* results, int num_results) {
+  byte i, j, byte_num;
+  long avg;
+  bool results_ok;
+  
+  for(i = 0, results_ok = true, avg = 0; i < num_registers && i < num_results; i++) {
+    Wire.beginTransmission(MPU);
+    Wire.write(registers[i]);
+    Wire.endTransmission(false);
+    
+    for(j = 0; j < 20; j++) {
+      Wire.requestFrom((uint8_t)MPU, (uint8_t)2);
+      if(Wire.available()) {
+        byte_num = 0;
+        while(Wire.available())
+          avg += Wire.read() << (byte_num++ * 8);
+      }
+      else
+        results_ok = false;
+      delay(50);
+    }
+    Wire.endTransmission();
+    avg /= 20;
+    
+    results[i] = avg;
+  }
+  
+  return results_ok;
+} */
+
 bool getMPUValues(const byte* registers, int num_registers, byte* results, int num_results) {
   bool result_ok;
   byte i,          //counter for register
         value,     //current value received from MPU
         byte_num,  //current byte number received from MPU
         current_num_results;  //total number of results received from MPU
-  for(i = 0, result_ok = true, current_num_results = 0;
-            i < num_registers && current_num_results < num_results; i++) {
+  for(i = 0, result_ok = true; i < num_registers && i < num_results; i++) {
     Wire.beginTransmission(MPU);
     Wire.write(registers[i]);
     Wire.endTransmission();
-    Wire.requestFrom(MPU, 2);
+    Wire.requestFrom((uint8_t)MPU, (uint8_t)2);
     
     byte_num = 0;
     value = 0;
     while(Wire.available())
       value += Wire.read() << (byte_num++ * 8);
-    results[current_num_results++] = value;
+    results[i] = value;
     if(!value)
       result_ok = false;
   }
